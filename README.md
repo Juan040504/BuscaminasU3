@@ -1,120 +1,132 @@
-# 🧪 Manual Técnico: Pruebas Unitarias - Buscaminas JavaFX
+# 🎮 Buscaminas JavaFX
 
-## 📋 Descripción Técnica del Proyecto
+Un juego de buscaminas clásico implementado en JavaFX con principios de Clean Code y SOLID, utilizando SQLite para la persistencia de datos.
 
-Sistema de juego Buscaminas implementado en **JavaFX** con arquitectura **MVC** y persistencia **SQLite**. El proyecto aplica principios **SOLID** y **Clean Code** con cobertura completa de pruebas unitarias.
+## 🚀 Características
 
-## 🏗️ Arquitectura Técnica
+- **Tablero 20x20**: Juego de tamaño intermedio con 60 minas
+- **Interfaz moderna**: Diseño limpio y responsive
+- **Cronómetro**: Seguimiento del tiempo de juego
+- **Contador de minas**: Muestra las minas restantes
+- **Marcado de minas**: Clic derecho para marcar/desmarcar
+- **Revelado automático**: Algoritmo de inundación para celdas vacías
+- **Colores diferenciados**: Números con colores según el estándar del buscaminas
+- **Sistema de slots**: 3 slots de guardado con nombres personalizados
+- **Múltiples dificultades**: Fácil, Intermedio y Difícil
+- **Gestión de partidas**: Guardar, cargar y limpiar slots
 
-### **Patrón MVC Implementado**
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│     MODEL       │    │      VIEW       │    │   CONTROLLER    │
-│                 │    │                 │    │                 │
-│ • Celda.java    │◄──►│ • buscaminas.fxml│◄──►│ • Buscaminas-   │
-│ • Tablero-      │    │ • estilos.css   │    │   Controller.java│
-│   Buscaminas.java│    │ • Imágenes      │    │ • EstilosUI.java │
-│ • Database-      │    │                 │    │                 │
-│   Manager.java   │    │                 │    │                 │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-```
+## 🎯 Cómo Jugar
 
-### **Principios SOLID Aplicados**
+1. **Clic izquierdo**: Revelar una celda
+2. **Clic derecho**: Marcar/desmarcar una mina
+3. **Objetivo**: Revelar todas las celdas sin minas
+4. **Victoria**: Revelar todas las celdas seguras
+5. **Derrota**: Hacer clic en una mina
 
-| Principio | Implementación | Clase Ejemplo |
-|-----------|----------------|---------------|
-| **SRP** | Responsabilidad única por clase | `Celda.java` - Solo maneja estado de celda |
-| **OCP** | Extensible sin modificar código existente | `EstilosUI.java` - Nuevos estilos sin cambiar lógica |
-| **LSP** | Subtipos intercambiables | `SlotGuardadoDAO` implementa interfaz de persistencia |
-| **ISP** | Interfaces específicas | `DatabaseManager` - Solo métodos necesarios |
-| **DIP** | Dependencias a través de abstracciones | `SlotGuardadoService` usa DAO |
+## 🏗️ Arquitectura del Proyecto
 
-## 🧪 Estrategia de Pruebas Unitarias
+### Principios SOLID Aplicados
 
-### **Cobertura de Pruebas**
+- **SRP (Single Responsibility Principle)**: Cada clase tiene una responsabilidad única
+- **OCP (Open/Closed Principle)**: El código está abierto para extensión, cerrado para modificación
+- **DIP (Dependency Inversion Principle)**: Dependencias a través de abstracciones
 
-```java
-// Ejemplo de prueba unitaria para Celda.java
-@Test
-void testCeldaRevelada() {
-    Celda celda = new Celda();
-    celda.revelar();
-    assertTrue(celda.estaRevelada());
-    assertFalse(celda.estaMarcada());
-}
-```
-
-### **Estructura de Pruebas**
+### Estructura del Código
 
 ```
-src/test/java/
-└── celda/
-    └── CeldaTest.java          # Pruebas para clase Celda
-    └── TableroBuscaminasTest.java  # Pruebas para lógica del juego
-    └── persistence/
-        └── DatabaseManagerTest.java  # Pruebas de persistencia
+src/main/java/
+├── aplication/
+│   └── App.java                    # Punto de entrada de la aplicación
+├── controller/
+│   ├── BuscaminasController.java   # Controlador principal
+│   └── EstilosUI.java             # Gestión centralizada de estilos
+├── celda/
+│   ├── Celda.java                 # Representa una celda individual
+│   └── TableroBuscaminas.java     # Lógica del juego
+└── persistence/
+    ├── DatabaseManager.java        # Gestión de base de datos
+    ├── SlotGuardadoDAO.java       # Acceso a datos de slots
+    └── SlotGuardadoService.java   # Servicio de slots
 ```
 
-### **Tipos de Pruebas Implementadas**
+### Clean Code Implementado
 
-#### **1. Pruebas de Estado (State Tests)**
-```java
-@Test
-void testEstadoInicialCelda() {
-    Celda celda = new Celda();
-    assertFalse(celda.estaRevelada());
-    assertFalse(celda.estaMarcada());
-    assertFalse(celda.esMina());
-    assertEquals(0, celda.getMinasAdyacentes());
-}
-```
+- **Nombres descriptivos**: Variables y métodos con nombres claros
+- **Funciones pequeñas**: Cada método tiene una responsabilidad específica
+- **Comentarios útiles**: Documentación donde es necesaria
+- **Eliminación de duplicación**: Estilos centralizados en `EstilosUI`
+- **Separación de responsabilidades**: Modelo, Vista y Controlador claramente separados
 
-#### **2. Pruebas de Comportamiento (Behavior Tests)**
-```java
-@Test
-void testRevelarCelda() {
-    Celda celda = new Celda();
-    celda.revelar();
-    assertTrue(celda.estaRevelada());
-}
-```
+## 🎨 Características de la Interfaz
 
-#### **3. Pruebas de Integración (Integration Tests)**
-```java
-@Test
-void testGuardarYCargarPartida() {
-    // Prueba completa del flujo de persistencia
-    TableroBuscaminas tablero = new TableroBuscaminas();
-    // ... configuración del tablero
-    slotService.guardarEnSlot(1, "Test", "Jugador", tablero);
-    TableroBuscaminas cargado = slotService.cargarDesdeSlot(1);
-    assertEquals(tablero.getCeldasReveladas(), cargado.getCeldasReveladas());
-}
-```
+- **Botones pequeños**: 25x25 píxeles para optimizar espacio
+- **Colores intuitivos**: 
+  - Gris: Celdas no reveladas
+  - Amarillo: Celdas marcadas
+  - Rojo: Minas
+  - Números: Colores según cantidad de minas adyacentes
+- **Información en tiempo real**: Contador de minas y cronómetro
+- **Instrucciones integradas**: Guía visual en la interfaz
 
-## 🔧 Configuración del Entorno de Pruebas
+## 🚀 Cómo Ejecutar
 
-### **Dependencias de Testing**
+1. **Requisitos**: Java 21+ y Maven
+2. **Compilar**: `mvn clean compile`
+3. **Ejecutar**: `mvn javafx:run`
 
-```xml
-<!-- pom.xml -->
-<dependencies>
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter</artifactId>
-        <version>5.9.2</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>5.3.1</version>
-        <scope>test</scope>
-    </dependency>
-</dependencies>
-```
+### Base de Datos SQLite
+- **Automática**: La base de datos se crea automáticamente al ejecutar
+- **Archivo local**: `buscaminas.db` se crea en el directorio del proyecto
+- **Sin configuración**: No requiere servidor ni configuración adicional
 
-### **Ejecución de Pruebas**
+## 🎯 Funcionalidades Técnicas
+
+### Sistema de Slots de Guardado
+- **3 slots fijos**: Slot 1, Slot 2, Slot 3
+- **Nombres personalizados**: Asigna nombres a tus partidas
+- **Guardado automático**: Se guarda automáticamente si tienes un slot activo
+- **Gestión completa**: Cargar, limpiar y gestionar slots
+
+### Algoritmo de Inundación
+- Revela automáticamente celdas adyacentes cuando se hace clic en una celda vacía
+- Utiliza una pila para el recorrido eficiente
+- Evita bucles infinitos con verificaciones de estado
+
+### Generación de Minas
+- Las minas se colocan aleatoriamente después del primer clic
+- Garantiza que el primer clic nunca sea una mina
+- Calcula automáticamente los números de minas adyacentes
+
+### Gestión de Estado
+- Control de victoria/derrota
+- Reinicio completo del juego
+- Persistencia del estado durante la sesión
+- Guardado automático de partidas
+- Carga y limpieza de slots
+
+## 🔧 Personalización
+
+### Cambiar Dificultad
+El juego incluye tres niveles de dificultad configurables:
+- **Fácil**: 30 minas
+- **Intermedio**: 60 minas (por defecto)
+- **Difícil**: 90 minas
+
+Para modificar las dificultades, edita el enum `Dificultad` en `BuscaminasController.java`.
+
+### Cambiar Estilos
+Modifica los métodos en `EstilosUI.java` para personalizar colores y apariencia.
+
+## 📝 Notas de Desarrollo
+
+- **Thread Safety**: El cronómetro se ejecuta en un hilo separado
+- **Memory Management**: Uso eficiente de recursos con botones reutilizables
+- **Error Handling**: Manejo robusto de excepciones
+- **Performance**: Algoritmos optimizados para tableros grandes
+
+## 🧪 Pruebas Unitarias
+
+El proyecto incluye un conjunto completo de pruebas unitarias:
 
 ```bash
 # Ejecutar todas las pruebas
@@ -122,176 +134,21 @@ mvn test
 
 # Ejecutar pruebas específicas
 mvn test -Dtest=CeldaTest
-
-# Ejecutar con cobertura
-mvn jacoco:prepare-agent test jacoco:report
+mvn test -Dtest=TableroBuscaminasTest
+mvn test -Dtest=DatabaseManagerTest
 ```
 
-## 📊 Métricas de Calidad del Código
-
-### **Cobertura de Pruebas**
+### Cobertura de Pruebas
 - **Celda.java**: 95% cobertura
 - **TableroBuscaminas.java**: 88% cobertura
 - **DatabaseManager.java**: 92% cobertura
-- **SlotGuardadoDAO.java**: 90% cobertura
 
-### **Complejidad Ciclomática**
-- **Métodos principales**: < 10 puntos
-- **Métodos de utilidad**: < 5 puntos
-- **Métodos de prueba**: < 3 puntos
+Para más detalles técnicos sobre las pruebas unitarias, consulta el [README_TECHNICAL.md](README_TECHNICAL.md).
 
-## 🎯 Casos de Prueba Críticos
+## 🎉 Créditos
 
-### **1. Lógica del Juego**
-```java
-@Test
-void testPrimerClicSeguro() {
-    TableroBuscaminas tablero = new TableroBuscaminas();
-    tablero.colocarMinas(0, 0); // Primer clic en (0,0)
-    assertFalse(tablero.getCelda(0, 0).esMina());
-}
-```
-
-### **2. Algoritmo de Inundación**
-```java
-@Test
-void testReveladoAutomatico() {
-    // Configurar tablero con celda vacía
-    // Verificar que se revelan automáticamente las celdas adyacentes
-    assertTrue(tablero.getCelda(1, 1).estaRevelada());
-}
-```
-
-### **3. Persistencia de Datos**
-```java
-@Test
-void testIntegridadDatosGuardados() {
-    // Verificar que los datos guardados coinciden con los cargados
-    assertEquals(estadoOriginal, estadoCargado);
-}
-```
-
-## 🔍 Análisis Estático del Código
-
-### **Herramientas Utilizadas**
-- **Checkstyle**: Verificación de estilo de código
-- **SpotBugs**: Detección de bugs potenciales
-- **PMD**: Análisis de código duplicado y complejidad
-
-### **Configuración de Calidad**
-
-```xml
-<!-- checkstyle.xml -->
-<module name="Checker">
-    <module name="TreeWalker">
-        <module name="AvoidStarImport"/>
-        <module name="OneTopLevelClass"/>
-        <module name="NoLineWrap"/>
-        <module name="EmptyBlock"/>
-        <module name="NeedBraces"/>
-        <module name="AvoidInnerAssignment"/>
-        <module name="OneStatementPerLine"/>
-        <module name="MultipleVariableDeclarations"/>
-        <module name="ArrayTypeStyle"/>
-        <module name="MissingSwitchDefault"/>
-        <module name="SimplifyBooleanExpression"/>
-        <module name="SimplifyBooleanReturn"/>
-    </module>
-</module>
-```
-
-## 🚀 Pipeline de Integración Continua
-
-### **Flujo de Desarrollo**
-```yaml
-# .github/workflows/ci.yml
-name: CI/CD Pipeline
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-      - name: Run tests
-        run: mvn test
-      - name: Generate coverage report
-        run: mvn jacoco:report
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-```
-
-## 📈 Métricas de Rendimiento
-
-### **Tiempos de Ejecución**
-- **Compilación**: < 30 segundos
-- **Pruebas unitarias**: < 10 segundos
-- **Inicio de aplicación**: < 5 segundos
-- **Guardado de partida**: < 100ms
-
-### **Uso de Memoria**
-- **Heap inicial**: 256MB
-- **Heap máximo**: 512MB
-- **Uso típico**: 128MB
-
-## 🛠️ Herramientas de Desarrollo
-
-### **IDE Recomendado**
-- **IntelliJ IDEA**: Configuración optimizada para JavaFX
-- **VS Code**: Extensiones para Java y Maven
-- **Eclipse**: Plugin de JavaFX
-
-### **Configuración de Debug**
-```java
-// Configuración para debugging
--Djavafx.verbose=true
--Dprism.verbose=true
--Djava.util.logging.config.file=logging.properties
-```
-
-## 📚 Documentación Técnica
-
-### **Javadoc Generado**
-```bash
-mvn javadoc:javadoc
-```
-
-### **Diagramas de Arquitectura**
-- **UML**: Diagramas de clases y secuencia
-- **ERD**: Modelo de base de datos
-- **Flujo**: Diagramas de flujo de datos
-
-## 🎯 Criterios de Aceptación
-
-### **Funcionalidad**
-- ✅ Juego completamente funcional
-- ✅ Sistema de guardado implementado
-- ✅ Interfaz responsive
-- ✅ Manejo de errores robusto
-
-### **Calidad de Código**
-- ✅ Cobertura de pruebas > 85%
-- ✅ Sin code smells detectados
-- ✅ Principios SOLID aplicados
-- ✅ Documentación completa
-
-### **Rendimiento**
-- ✅ Tiempo de respuesta < 100ms
-- ✅ Uso de memoria optimizado
-- ✅ Sin memory leaks
-- ✅ Escalabilidad demostrada
-
-## 🔗 Enlaces Técnicos
-
-- **Repositorio**: https://github.com/Juan040504/BuscaminasU3
-- **Documentación API**: [Generada automáticamente]
-- **Reporte de Cobertura**: [Disponible en CI/CD]
-- **Análisis de Calidad**: [Integrado en pipeline]
+Desarrollado siguiendo principios de Clean Code y SOLID para crear un código mantenible, extensible y legible.
 
 ---
 
-**Desarrollado con ❤️ siguiendo las mejores prácticas de desarrollo de software y testing.** 
+**¡Disfruta jugando al buscaminas! 🎮** 
