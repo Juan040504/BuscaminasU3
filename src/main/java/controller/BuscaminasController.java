@@ -28,19 +28,16 @@ import java.util.List;
 import java.util.Optional;
 public class BuscaminasController {
 
-    // Constantes del juego
     private static final int TAMANO_TABLERO = 20;
     private static final int TAMANO_BOTON = 25;
     private static final int TAMANO_FUENTE = 12;
     private static final int ESPACIADO_GRID = 1;
     
-    // Atributos del modelo
     private TableroBuscaminas tableroLogico;
     private Button[][] botones;
     private boolean primerClic;
     private boolean juegoIniciado;
     
-    // Elementos de la interfaz
     @FXML private GridPane gridTablero;
     @FXML private Label lblCierre;
     @FXML private Label lblMinasRestantes;
@@ -52,11 +49,8 @@ public class BuscaminasController {
     @FXML private Button btnGuardarPartida;
     @FXML private Button btnCargarPartidas;
     
-    // Variables de tiempo
     private long tiempoInicio;
     private boolean cronometroActivo;
-    
-    // Variables para los modos de juego
     private enum Dificultad {
         FACIL(30, "🌱 Fácil"),
         INTERMEDIO(60, "⚡ Intermedio"),
@@ -76,13 +70,10 @@ public class BuscaminasController {
     
     private Dificultad dificultadActual = Dificultad.INTERMEDIO;
     
-    // Variables para la base de datos
     private SlotGuardadoService slotService;
     private Integer slotActual = null;
     private String nombreJugador = "Jugador";
     private boolean guardadoAutomatico = true;
-    
-    // ========== MÉTODOS DE EVENTOS FXML ==========
     
     @FXML
     void click(MouseEvent event) {
@@ -135,11 +126,8 @@ public class BuscaminasController {
         crearBotonesTablero();
         iniciarCronometro();
         
-        // Configurar el botón de dificultad
         btnModoFacil.setText("🎯 Dificultad");
     }
-    
-    // ========== MÉTODOS DE INICIALIZACIÓN ==========
     
 
     private void inicializarModelos() {
@@ -225,7 +213,6 @@ public class BuscaminasController {
             if (!boton.getText().equals("🚩") && !boton.getText().equals("💣")) {
                 boton.setStyle(EstilosUI.obtenerEstiloBotonBuscaminas());
             } else if (boton.getText().equals("🚩")) {
-                // Mantener el estilo de bandera cuando el mouse sale
                 boton.setStyle(EstilosUI.obtenerEstiloBotonMarcado());
             }
         });
@@ -242,7 +229,7 @@ public class BuscaminasController {
         });
     }
     
-    // ========== MÉTODOS DE LÓGICA DEL JUEGO ==========
+
     
 
 
@@ -256,11 +243,9 @@ public class BuscaminasController {
         }
         
         if (tableroLogico.revelarCelda(fila, columna)) {
-            // Actualizar todas las celdas que fueron reveladas por el algoritmo de inundación
             actualizarTodasLasCeldasReveladas();
             actualizarInterfaz();
             
-            // Guardar automáticamente después de cada movimiento
             guardarAutomaticamente();
             
             if (tableroLogico.isJuegoTerminado()) {
@@ -284,7 +269,6 @@ public class BuscaminasController {
             actualizarBotonMarcado(fila, columna);
             actualizarInterfaz();
             
-            // Guardar automáticamente después de marcar/desmarcar
             guardarAutomaticamente();
         }
     }
@@ -298,10 +282,8 @@ public class BuscaminasController {
         cronometroActivo = true;
         lblEstado.setText("¡Juego iniciado!");
         
-        // Deshabilitar botones durante el juego
         deshabilitarBotonesDuranteJuego();
         
-        // Crear nueva partida automáticamente al iniciar
         crearNuevaPartida();
     }
     
@@ -329,10 +311,8 @@ public class BuscaminasController {
         Celda celda = tableroLogico.getCelda(fila, columna);
         
         if (celda.estaMarcada()) {
-            // Usar imagen de banderita en lugar del emoji
             boton.setText("");
             boton.setStyle(EstilosUI.obtenerEstiloBotonMarcado());
-            // Cargar y establecer la imagen de la banderita
             try {
                 javafx.scene.image.Image imagenBanderita = new javafx.scene.image.Image(
                     getClass().getResourceAsStream("/images/Banderita.png")
@@ -342,7 +322,6 @@ public class BuscaminasController {
                 imageView.setFitHeight(16);
                 boton.setGraphic(imageView);
             } catch (Exception e) {
-                // Fallback al emoji si no se puede cargar la imagen
                 boton.setText("🚩");
                 boton.setGraphic(null);
             }
@@ -385,11 +364,9 @@ public class BuscaminasController {
                 
                 if (celda.esMina() && !celda.estaMarcada()) {
                     mostrarImagenMina(boton);
-                    // Desactivar efectos hover para las minas
                     boton.setOnMouseEntered(null);
                     boton.setOnMouseExited(null);
                 } else if (celda.estaRevelada() && !celda.esMina()) {
-                    // Mostrar celdas reveladas que no son minas
                     if (celda.tieneMinasAdyacentes()) {
                         boton.setText(String.valueOf(celda.getMinasAdyacentes()));
                         boton.setStyle(EstilosUI.obtenerEstiloBotonNumero(celda.getMinasAdyacentes()));
@@ -407,10 +384,8 @@ public class BuscaminasController {
     private void manejarFinJuego() {
         cronometroActivo = false;
         
-        // Habilitar botones después del juego
         habilitarBotonesDespuesDelJuego();
         
-        // Pequeña pausa para que el usuario vea el resultado antes de la alerta
         Platform.runLater(() -> {
             try {
                 Thread.sleep(500);
@@ -434,7 +409,6 @@ public class BuscaminasController {
     private void manejarFinJuegoSinAlerta() {
         cronometroActivo = false;
         
-        // Habilitar botones después del juego
         habilitarBotonesDespuesDelJuego();
         
         if (tableroLogico.isJuegoGanado()) {
@@ -446,7 +420,7 @@ public class BuscaminasController {
         }
     }
     
-    // ========== MÉTODOS DE INTERFAZ ==========
+
     
 
     private void actualizarInterfaz() {
@@ -510,7 +484,7 @@ public class BuscaminasController {
         System.exit(0);
     }
     
-    // ========== MÉTODOS DE REINICIO ==========
+
     
 
     private void reiniciarJuego() {
@@ -519,10 +493,8 @@ public class BuscaminasController {
         reiniciarBotones();
         iniciarCronometro();
         
-        // Habilitar botones al reiniciar
         habilitarBotonesDespuesDelJuego();
         
-        // Resetear variables de partida
         slotActual = null;
         nombreJugador = "Jugador";
         guardadoAutomatico = true;
@@ -559,7 +531,7 @@ public class BuscaminasController {
         }
     }
     
-    // ========== MÉTODOS DE AYUDA ==========
+
     
 
     private void mostrarPista() {
@@ -568,12 +540,10 @@ public class BuscaminasController {
             return;
         }
         
-        // Buscar una celda segura para revelar
         for (int fila = 0; fila < TAMANO_TABLERO; fila++) {
             for (int columna = 0; columna < TAMANO_TABLERO; columna++) {
                 Celda celda = tableroLogico.getCelda(fila, columna);
                 if (!celda.estaRevelada() && !celda.estaMarcada() && !celda.esMina()) {
-                    // Revelar esta celda como pista
                     tableroLogico.revelarCelda(fila, columna);
                     actualizarTodasLasCeldasReveladas();
                     actualizarInterfaz();
@@ -587,9 +557,7 @@ public class BuscaminasController {
     }
     
 
-    /**
-     * Muestra el menú de selección de dificultad.
-     */
+
     private void cambiarModoFacil() {
         if (juegoIniciado && !tableroLogico.isJuegoTerminado()) {
             mostrarAlerta("Dificultad", "No puedes cambiar la dificultad durante el juego.");
@@ -599,11 +567,8 @@ public class BuscaminasController {
         mostrarMenuDificultad();
     }
     
-    /**
-     * Muestra un menú modal para seleccionar la dificultad.
-     */
+
     private void mostrarMenuDificultad() {
-        // Crear ventana modal para selección de dificultad
         Stage modalStage = new Stage();
         modalStage.initModality(Modality.APPLICATION_MODAL);
         modalStage.initOwner(gridTablero.getScene().getWindow());
@@ -612,18 +577,15 @@ public class BuscaminasController {
         modalStage.setMinWidth(300);
         modalStage.setMinHeight(300);
         
-        // Crear contenido de la ventana
         VBox content = new VBox(20);
         content.setPadding(new Insets(30));
         content.setStyle("-fx-background-color: white; -fx-border-color: #ccc; -fx-border-width: 1;");
         content.setAlignment(Pos.TOP_CENTER);
         
-        // Título
         Label titleLabel = new Label("Selecciona la Dificultad");
         titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333;");
         titleLabel.setAlignment(Pos.CENTER);
         
-        // Botones de dificultad
         VBox botonesContainer = new VBox(10);
         botonesContainer.setAlignment(Pos.CENTER);
         
@@ -631,13 +593,11 @@ public class BuscaminasController {
             Button btnDificultad = new Button(dificultad.getNombre() + " (" + dificultad.getMinas() + " minas)");
             btnDificultad.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-min-width: 200; -fx-font-size: 14px;");
             
-            // Resaltar la dificultad actual
             if (dificultad == dificultadActual) {
                 btnDificultad.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-min-width: 200; -fx-font-size: 14px;");
                 btnDificultad.setText(dificultad.getNombre() + " (" + dificultad.getMinas() + " minas) ✓");
             }
             
-            // Evento para seleccionar dificultad
             btnDificultad.setOnAction(e -> {
                 seleccionarDificultad(dificultad);
                 modalStage.close();
@@ -646,48 +606,35 @@ public class BuscaminasController {
             botonesContainer.getChildren().add(btnDificultad);
         }
         
-        // Botón cancelar
         Button cancelarBtn = new Button("Cancelar");
         cancelarBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-min-width: 100;");
         cancelarBtn.setOnAction(e -> modalStage.close());
         
         content.getChildren().addAll(titleLabel, botonesContainer, cancelarBtn);
         
-        // Crear escena y mostrar
         Scene scene = new Scene(content, 300, 300);
         modalStage.setScene(scene);
         modalStage.showAndWait();
     }
     
-    /**
-     * Aplica la dificultad seleccionada.
-     * @param dificultad la dificultad seleccionada
-     */
+
     private void seleccionarDificultad(Dificultad dificultad) {
         dificultadActual = dificultad;
         tableroLogico = new TableroBuscaminas(dificultad.getMinas());
         
-        // Mantener el texto del botón como "Dificultad"
         btnModoFacil.setText("🎯 Dificultad");
         
-        // Actualizar el estado
         lblEstado.setText("Dificultad: " + dificultad.getNombre() + " - " + dificultad.getMinas() + " minas");
         
-        // Reiniciar la interfaz
         reiniciarInterfaz();
     }
-    
-    /**
-     * Deshabilita los botones que no deben estar disponibles durante el juego.
-     */
+
     private void deshabilitarBotonesDuranteJuego() {
         btnModoFacil.setDisable(true);
         btnCargarPartidas.setDisable(true);
     }
     
-    /**
-     * Habilita los botones cuando el juego termina.
-     */
+
     private void habilitarBotonesDespuesDelJuego() {
         btnModoFacil.setDisable(false);
         btnCargarPartidas.setDisable(false);
@@ -697,7 +644,6 @@ public class BuscaminasController {
     private void mostrarImagenMina(Button boton) {
         boton.setText("");
         boton.setStyle(EstilosUI.obtenerEstiloBotonMina());
-        // Cargar y establecer la imagen de la mina
         try {
             javafx.scene.image.Image imagenMina = new javafx.scene.image.Image(
                 getClass().getResourceAsStream("/images/Mina.png")
@@ -707,7 +653,6 @@ public class BuscaminasController {
             imageView.setFitHeight(16);
             boton.setGraphic(imageView);
         } catch (Exception e) {
-            // Fallback al emoji si no se puede cargar la imagen
             boton.setText("💣");
             boton.setGraphic(null);
         }
@@ -729,11 +674,9 @@ public class BuscaminasController {
     private void guardarAutomaticamente() {
         if (guardadoAutomatico && juegoIniciado && slotActual != null) {
             try {
-                // Actualizar partida existente en el slot actual
                 String nombrePartida = "Partida Automática";
                 slotService.guardarEnSlot(slotActual, nombrePartida, nombreJugador, tableroLogico);
             } catch (Exception e) {
-                // Silenciar errores de guardado automático para no interrumpir el juego
                 System.err.println("Error en guardado automático: " + e.getMessage());
             }
         }
@@ -744,7 +687,6 @@ public class BuscaminasController {
         try {
             List<SlotGuardadoDAO.SlotInfo> slots = slotService.obtenerInfoSlots();
             
-            // Crear ventana modal para selección de slot
             Stage modalStage = new Stage();
             modalStage.initModality(Modality.APPLICATION_MODAL);
             modalStage.initOwner(gridTablero.getScene().getWindow());
@@ -753,24 +695,20 @@ public class BuscaminasController {
             modalStage.setMinWidth(400);
             modalStage.setMinHeight(300);
             
-            // Crear contenido de la ventana
             VBox content = new VBox(20);
             content.setPadding(new Insets(25));
             content.setStyle("-fx-background-color: white; -fx-border-color: #ccc; -fx-border-width: 1;");
             content.setAlignment(Pos.TOP_CENTER);
             
-            // Título
             Label titleLabel = new Label("Selecciona un Slot para Guardar");
             titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333;");
             titleLabel.setAlignment(Pos.CENTER);
             
-            // Subtítulo con instrucciones
             Label subtitleLabel = new Label("Elige un slot y asigna un nombre a tu partida");
             subtitleLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666; -fx-font-style: italic;");
             subtitleLabel.setAlignment(Pos.CENTER);
             subtitleLabel.setWrapText(true);
             
-            // Lista de slots
             VBox slotsList = new VBox(10);
             slotsList.setStyle("-fx-background-color: #f9f9f9; -fx-padding: 10; -fx-border-color: #ddd; -fx-border-width: 1;");
             
@@ -780,7 +718,6 @@ public class BuscaminasController {
                 slotItem.setPadding(new Insets(12));
                 slotItem.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-width: 1; -fx-cursor: hand; -fx-background-radius: 5; -fx-border-radius: 5;");
                 
-                // Información del slot
                 VBox slotInfo = new VBox(2);
                 slotInfo.setPrefWidth(250);
                 
@@ -792,11 +729,9 @@ public class BuscaminasController {
                 
                 slotInfo.getChildren().addAll(nombreLabel, estadoLabel);
                 
-                // Botón seleccionar
                 Button seleccionarBtn = new Button("Seleccionar");
                 seleccionarBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-min-width: 80;");
                 
-                // Evento para seleccionar el slot
                 seleccionarBtn.setOnAction(e -> {
                     seleccionarSlotParaGuardar(slot.getSlotId(), modalStage);
                 });
@@ -805,14 +740,12 @@ public class BuscaminasController {
                 slotsList.getChildren().add(slotItem);
             }
             
-            // Botón cancelar
             Button cancelarBtn = new Button("Cancelar");
             cancelarBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25; -fx-min-width: 100;");
             cancelarBtn.setOnAction(e -> modalStage.close());
             
             content.getChildren().addAll(titleLabel, subtitleLabel, slotsList, cancelarBtn);
             
-            // Crear escena y mostrar
             Scene scene = new Scene(content, 400, 350);
             modalStage.setScene(scene);
             modalStage.showAndWait();
@@ -823,7 +756,6 @@ public class BuscaminasController {
     }
     
     private void seleccionarSlotParaGuardar(int slotId, Stage modalStage) {
-        // Crear ventana para ingresar nombre de la partida
         Stage nombreStage = new Stage();
         nombreStage.initModality(Modality.APPLICATION_MODAL);
         nombreStage.initOwner(modalStage);
@@ -893,30 +825,25 @@ public class BuscaminasController {
             modalStage.setMinWidth(500);
             modalStage.setMinHeight(400);
             
-            // Crear contenido de la ventana
             VBox content = new VBox(15);
             content.setPadding(new Insets(25));
             content.setStyle("-fx-background-color: white; -fx-border-color: #ccc; -fx-border-width: 1;");
             content.setAlignment(Pos.TOP_CENTER);
             
-            // Título
             Label titleLabel = new Label("Slots de Guardado");
             titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333;");
             titleLabel.setAlignment(Pos.CENTER);
             
-            // Subtítulo con instrucciones
             Label subtitleLabel = new Label("Haz clic en 'Cargar' para continuar una partida o 'Limpiar' para borrar el slot");
             subtitleLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666; -fx-font-style: italic;");
             subtitleLabel.setAlignment(Pos.CENTER);
             subtitleLabel.setWrapText(true);
             
-            // Lista de slots con scroll
             VBox slotsList = new VBox(5);
             slotsList.setStyle("-fx-background-color: #f9f9f9; -fx-padding: 10; -fx-border-color: #ddd; -fx-border-width: 1;");
             slotsList.setPrefHeight(250);
             slotsList.setMaxHeight(250);
             
-            // ScrollPane para la lista de slots
             javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane(slotsList);
             scrollPane.setFitToWidth(true);
             scrollPane.setFitToHeight(true);
@@ -930,11 +857,9 @@ public class BuscaminasController {
                 slotItem.setPadding(new Insets(12));
                 slotItem.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-width: 1; -fx-cursor: hand; -fx-background-radius: 5; -fx-border-radius: 5;");
                 
-                // Información del slot
                 VBox slotInfo = new VBox(2);
                 slotInfo.setPrefWidth(300);
                 
-                // Marcar si es el slot actualmente cargado
                 String indicadorActual = (this.slotActual != null && this.slotActual == slot.getSlotId()) ? " (ACTUAL)" : "";
                 
                 Label nombreLabel = new Label("Slot " + slot.getSlotId() + " - " + slot.getNombrePartida() + indicadorActual);
@@ -949,28 +874,23 @@ public class BuscaminasController {
                 
                 slotInfo.getChildren().addAll(nombreLabel, estadoLabel, progresoLabel);
                 
-                // Contenedor para los botones
                 HBox botonesContainer = new HBox(5);
                 botonesContainer.setAlignment(Pos.CENTER_RIGHT);
                 botonesContainer.setPrefWidth(150);
                 
-                // Botón cargar
                 Button cargarBtn = new Button("Cargar");
                 cargarBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-min-width: 60;");
                 cargarBtn.setDisable(!slot.estaOcupado());
                 
-                // Evento para cargar el slot
                 cargarBtn.setOnAction(e -> {
                     cargarSlot(slot.getSlotId());
                     modalStage.close();
                 });
                 
-                // Botón limpiar
                 Button limpiarBtn = new Button("Limpiar");
                 limpiarBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-min-width: 60;");
                 limpiarBtn.setDisable(!slot.estaOcupado());
                 
-                // Evento para limpiar el slot
                 limpiarBtn.setOnAction(e -> {
                     limpiarSlot(slot.getSlotId(), slotsList, slotItem);
                 });
@@ -980,14 +900,12 @@ public class BuscaminasController {
                 slotsList.getChildren().add(slotItem);
             }
             
-            // Botón cerrar
             Button cerrarBtn = new Button("Cerrar");
             cerrarBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25; -fx-min-width: 100;");
             cerrarBtn.setOnAction(e -> modalStage.close());
             
             content.getChildren().addAll(titleLabel, subtitleLabel, scrollPane, cerrarBtn);
             
-            // Crear escena y mostrar
             Scene scene = new Scene(content, 500, 450);
             modalStage.setScene(scene);
             modalStage.showAndWait();
@@ -999,14 +917,13 @@ public class BuscaminasController {
     
 
     private String solicitarNombreJugador() {
-        // Implementación simple - en una versión más avanzada podrías usar un diálogo
         return "Jugador_" + System.currentTimeMillis();
     }
     
 
     private void crearNuevaPartida() {
         nombreJugador = solicitarNombreJugador();
-        slotActual = null; // Resetear slot para nueva partida
+        slotActual = null;
         guardadoAutomatico = true;
     }
     
@@ -1017,11 +934,9 @@ public class BuscaminasController {
             tableroLogico = tableroCargado;
             slotActual = slotId;
             
-            // Actualizar la interfaz con el tablero cargado
             actualizarTodasLasCeldasReveladas();
             actualizarInterfaz();
             
-            // Reiniciar el juego para que funcione correctamente con la partida cargada
             primerClic = false;
             juegoIniciado = true;
             cronometroActivo = true;
@@ -1035,7 +950,6 @@ public class BuscaminasController {
 
     private void limpiarSlot(int slotId, VBox slotsList, HBox slotItem) {
         try {
-            // Mostrar confirmación antes de limpiar
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacion.setTitle("Confirmar Limpieza");
             confirmacion.setHeaderText(null);
@@ -1049,7 +963,6 @@ public class BuscaminasController {
             
             confirmacion.setContentText(mensajeConfirmacion);
             
-            // Configurar para que aparezca por encima de la ventana modal
             confirmacion.initModality(Modality.APPLICATION_MODAL);
             confirmacion.initOwner(gridTablero.getScene().getWindow());
             
@@ -1059,13 +972,10 @@ public class BuscaminasController {
             Optional<ButtonType> resultado = confirmacion.showAndWait();
             
             if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                // Limpiar el slot en la base de datos
                 slotService.limpiarSlot(slotId);
                 
-                // Eliminar de la interfaz
                 slotsList.getChildren().remove(slotItem);
                 
-                // Si el slot limpiado es el que está cargado actualmente, resetear
                 if (this.slotActual != null && this.slotActual == slotId) {
                     this.slotActual = null;
                     reiniciarJuego();

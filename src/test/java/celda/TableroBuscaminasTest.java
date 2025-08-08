@@ -34,11 +34,9 @@ class TableroBuscaminasTest {
     @Test
     @DisplayName("Test: Colocación de minas después del primer clic")
     void testColocacionMinas() {
-        // Verificar que el primer clic no es una mina
         tablero.colocarMinas(0, 0);
         assertFalse(tablero.getCelda(0, 0).esMina());
         
-        // Verificar que se colocaron las minas correctamente
         int minasContadas = 0;
         for (int fila = 0; fila < tablero.getTamano(); fila++) {
             for (int columna = 0; columna < tablero.getTamano(); columna++) {
@@ -55,7 +53,6 @@ class TableroBuscaminasTest {
     void testReveladoCeldaSegura() {
         tablero.colocarMinas(0, 0);
         
-        // Buscar una celda que no sea mina
         boolean celdaRevelada = false;
         for (int fila = 0; fila < tablero.getTamano() && !celdaRevelada; fila++) {
             for (int columna = 0; columna < tablero.getTamano() && !celdaRevelada; columna++) {
@@ -75,7 +72,6 @@ class TableroBuscaminasTest {
     void testReveladoMina() {
         tablero.colocarMinas(0, 0);
         
-        // Buscar una mina y revelarla
         boolean minaRevelada = false;
         for (int fila = 0; fila < tablero.getTamano() && !minaRevelada; fila++) {
             for (int columna = 0; columna < tablero.getTamano() && !minaRevelada; columna++) {
@@ -96,13 +92,11 @@ class TableroBuscaminasTest {
     void testMarcadoCelda() {
         tablero.colocarMinas(0, 0);
         
-        // Marcar una celda
         boolean celdaMarcada = tablero.marcarCelda(0, 0);
         assertTrue(celdaMarcada);
         assertTrue(tablero.getCelda(0, 0).estaMarcada());
         assertEquals(1, tablero.getMinasMarcadas());
         
-        // Desmarcar la celda
         boolean celdaDesmarcada = tablero.marcarCelda(0, 0);
         assertTrue(celdaDesmarcada);
         assertFalse(tablero.getCelda(0, 0).estaMarcada());
@@ -114,10 +108,8 @@ class TableroBuscaminasTest {
     void testNoMarcarCeldaRevelada() {
         tablero.colocarMinas(0, 0);
         
-        // Revelar una celda
         tablero.revelarCelda(0, 0);
         
-        // Intentar marcar la celda revelada
         boolean marcadoFallido = tablero.marcarCelda(0, 0);
         assertFalse(marcadoFallido);
         assertFalse(tablero.getCelda(0, 0).estaMarcada());
@@ -128,12 +120,10 @@ class TableroBuscaminasTest {
     void testAlgoritmoInundacion() {
         tablero.colocarMinas(0, 0);
         
-        // Revelar una celda vacía (que debería activar el algoritmo de inundación)
         int celdasReveladasAntes = tablero.getCeldasReveladas();
         tablero.revelarCelda(0, 0);
         int celdasReveladasDespues = tablero.getCeldasReveladas();
         
-        // El algoritmo de inundación debería revelar más de una celda
         assertTrue(celdasReveladasDespues > celdasReveladasAntes);
     }
     
@@ -144,16 +134,13 @@ class TableroBuscaminasTest {
         tablero.revelarCelda(0, 0);
         tablero.marcarCelda(1, 1);
         
-        // Reiniciar el tablero
         tablero.reiniciar();
         
-        // Verificar que el tablero está en estado inicial
         assertEquals(0, tablero.getCeldasReveladas());
         assertEquals(0, tablero.getMinasMarcadas());
         assertFalse(tablero.isJuegoTerminado());
         assertFalse(tablero.isJuegoGanado());
         
-        // Verificar que las celdas están en estado inicial
         for (int fila = 0; fila < tablero.getTamano(); fila++) {
             for (int columna = 0; columna < tablero.getTamano(); columna++) {
                 Celda celda = tablero.getCelda(fila, columna);
@@ -170,7 +157,6 @@ class TableroBuscaminasTest {
     void testCalculoMinasAdyacentes() {
         tablero.colocarMinas(0, 0);
         
-        // Verificar que las celdas tienen el número correcto de minas adyacentes
         boolean minasAdyacentesCalculadas = false;
         for (int fila = 0; fila < tablero.getTamano(); fila++) {
             for (int columna = 0; columna < tablero.getTamano(); columna++) {
@@ -190,7 +176,6 @@ class TableroBuscaminasTest {
     void testVictoriaJuego() {
         tablero.colocarMinas(0, 0);
         
-        // Revelar todas las celdas que no son minas
         for (int fila = 0; fila < tablero.getTamano(); fila++) {
             for (int columna = 0; columna < tablero.getTamano(); columna++) {
                 if (!tablero.getCelda(fila, columna).esMina()) {
@@ -199,7 +184,6 @@ class TableroBuscaminasTest {
             }
         }
         
-        // Verificar victoria
         assertTrue(tablero.isJuegoTerminado());
         assertTrue(tablero.isJuegoGanado());
     }
@@ -217,7 +201,6 @@ class TableroBuscaminasTest {
     void testLimitesTablero() {
         tablero.colocarMinas(0, 0);
         
-        // Verificar que no se puede acceder fuera de los límites
         assertThrows(IndexOutOfBoundsException.class, () -> {
             tablero.getCelda(-1, 0);
         });

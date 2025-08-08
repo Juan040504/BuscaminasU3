@@ -13,18 +13,13 @@ class CeldaTest {
         celda = new Celda();
     }
     
-    // ========== PRUEBAS DEL CONSTRUCTOR ==========
-    
     @Test
     void testConstructor_EstadoInicial() {
-        // Verificar que la celda se inicializa correctamente
         assertFalse(celda.esMina(), "Una celda nueva no debería ser una mina");
         assertFalse(celda.estaRevelada(), "Una celda nueva no debería estar revelada");
         assertFalse(celda.estaMarcada(), "Una celda nueva no debería estar marcada");
         assertEquals(0, celda.getMinasAdyacentes(), "Una celda nueva debería tener 0 minas adyacentes");
     }
-    
-    // ========== PRUEBAS DE GETTERS ==========
     
     @Test
     void testEsMina_ValorPorDefecto() {
@@ -50,8 +45,6 @@ class CeldaTest {
         assertEquals(0, resultado, "Una celda nueva debería tener 0 minas adyacentes");
     }
     
-    // ========== PRUEBAS DE SETTERS ==========
-    
     @Test
     void testEstablecerComoMina_CambiaEstado() {
         celda.establecerComoMina();
@@ -72,11 +65,9 @@ class CeldaTest {
     
     @Test
     void testAlternarMarcado_DeTrueAFalse() {
-        // Primero marcar la celda
         celda.alternarMarcado();
         assertTrue(celda.estaMarcada(), "Primera alternancia debería marcar la celda");
         
-        // Luego desmarcar
         celda.alternarMarcado();
         assertFalse(celda.estaMarcada(), "Segunda alternancia debería desmarcar la celda");
     }
@@ -89,8 +80,6 @@ class CeldaTest {
         celda.incrementarMinasAdyacentes();
         assertEquals(2, celda.getMinasAdyacentes(), "Después de incrementar dos veces, debería tener 2 minas adyacentes");
     }
-    
-    // ========== PRUEBAS DE MÉTODOS DE UTILIDAD ==========
     
     @Test
     void testEsVacia_CeldaNueva() {
@@ -133,37 +122,28 @@ class CeldaTest {
         assertFalse(resultado, "Una celda que es mina no debería tener minas adyacentes (método retorna false)");
     }
     
-    // ========== PRUEBAS DE REINICIO ==========
-    
     @Test
     void testReiniciar_ReseteaTodosLosEstados() {
-        // Configurar la celda con varios estados
         celda.establecerComoMina();
         celda.revelar();
         celda.alternarMarcado();
         celda.incrementarMinasAdyacentes();
         
-        // Verificar que los estados están configurados
         assertTrue(celda.esMina(), "Celda debería ser mina antes del reinicio");
         assertTrue(celda.estaRevelada(), "Celda debería estar revelada antes del reinicio");
         assertTrue(celda.estaMarcada(), "Celda debería estar marcada antes del reinicio");
         assertEquals(1, celda.getMinasAdyacentes(), "Celda debería tener minas adyacentes antes del reinicio");
         
-        // Reiniciar
         celda.reiniciar();
         
-        // Verificar que todos los estados se resetean
         assertFalse(celda.esMina(), "Después del reinicio, esMina() debería retornar false");
         assertFalse(celda.estaRevelada(), "Después del reinicio, estaRevelada() debería retornar false");
         assertFalse(celda.estaMarcada(), "Después del reinicio, estaMarcada() debería retornar false");
         assertEquals(0, celda.getMinasAdyacentes(), "Después del reinicio, debería tener 0 minas adyacentes");
     }
     
-    // ========== PRUEBAS DE INTEGRACIÓN ==========
-    
     @Test
     void testFlujoCompleto_RevelarCeldaVacia() {
-        // Simular el flujo de revelar una celda vacía
         celda.revelar();
         
         assertTrue(celda.estaRevelada(), "La celda debería estar revelada");
@@ -175,7 +155,6 @@ class CeldaTest {
     
     @Test
     void testFlujoCompleto_MarcarYDesmarcar() {
-        // Simular el flujo de marcar y desmarcar una celda
         celda.alternarMarcado();
         assertTrue(celda.estaMarcada(), "Primera alternancia debería marcar la celda");
         

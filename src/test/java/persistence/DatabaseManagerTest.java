@@ -91,15 +91,11 @@ class DatabaseManagerTest {
     @Test
     @DisplayName("Test: Inicialización de tablas")
     void testInicializacionTablas() {
-        // La inicialización se hace en el constructor
-        // Verificamos que las tablas existen intentando acceder a ellas
         try (Connection connection = databaseManager.getConnection()) {
-            // Verificar que la tabla slots_guardado existe
             var stmt = connection.createStatement();
             var rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='slots_guardado'");
             assertTrue(rs.next());
             
-            // Verificar que la tabla celdas_slots existe
             rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='celdas_slots'");
             assertTrue(rs.next());
             
@@ -117,7 +113,7 @@ class DatabaseManagerTest {
             
             if (rs.next()) {
                 int count = rs.getInt("count");
-                assertEquals(3, count); // Deberían existir 3 slots por defecto
+                assertEquals(3, count);
             } else {
                 fail("No se pudieron contar los slots");
             }
@@ -208,12 +204,10 @@ class DatabaseManagerTest {
         try (Connection connection = databaseManager.getConnection()) {
             var stmt = connection.createStatement();
             
-            // Intentar insertar un slot_id inválido (debería fallar)
             try {
                 stmt.execute("INSERT INTO slots_guardado (slot_id, nombre_partida, nombre_jugador) VALUES (4, 'Test', 'Test')");
                 fail("Debería haber fallado al insertar slot_id = 4");
             } catch (SQLException e) {
-                // Esperado - la restricción CHECK debería prevenir esto
                 assertTrue(e.getMessage().contains("CHECK") || e.getMessage().contains("constraint"));
             }
             

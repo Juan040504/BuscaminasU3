@@ -27,7 +27,6 @@ public class App extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 580, 690);
         stage.setScene(scene);
 
-        // Configuración de la ventana
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);

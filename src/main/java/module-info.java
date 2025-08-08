@@ -12,7 +12,6 @@ module com.example.gato {
     requires com.almasb.fxgl.all;
     requires com.fasterxml.jackson.databind;
     
-    // Dependencias para SQLite
     requires java.sql;
     requires org.slf4j;
 
@@ -24,6 +23,5 @@ module com.example.gato {
     opens celda to javafx.fxml;
     exports celda;
     
-    // Exportar el paquete persistence
     exports persistence;
 }
