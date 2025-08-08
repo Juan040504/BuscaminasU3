@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="550.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BuscaminasController">
+   <cursor>
+      <Cursor fx:constant="S_RESIZE" />
+   </cursor>
+   
+   <!-- Botón de cierre -->
+   <Label fx:id="lblCierre" alignment="CENTER" contentDisplay="CENTER" layoutX="520.0" layoutY="10.0" onMouseClicked="#click" onMouseEntered="#enter" onMouseExited="#exited" text="X" style="-fx-text-fill: #616161; -fx-font-size: 18px; -fx-font-weight: bold;">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+   </Label>
+   
+   <!-- Panel de información del juego -->
+   <Label fx:id="lblEstado" alignment="CENTER" layoutX="50.0" layoutY="20.0" prefHeight="30.0" prefWidth="450.0" text="¡Preparado para jugar!" style="-fx-text-fill: #212121; -fx-font-size: 16px; -fx-font-weight: bold;">
+   </Label>
+   
+   <!-- Cabecera con minas, nuevo juego y tiempo -->
+   <HBox layoutX="50.0" layoutY="60.0" prefWidth="500.0" spacing="20" alignment="CENTER">
+      <Label fx:id="lblMinasRestantes" alignment="CENTER" prefHeight="30.0" prefWidth="120.0" text="Minas: 60" style="-fx-text-fill: #D32F2F; -fx-font-size: 14px; -fx-font-weight: bold;" />
+      <Button fx:id="btnNuevoJuego" onAction="#nuevoJuego" style="-fx-background-color: #42A5F5; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8;" text="😊" />
+      <Label fx:id="lblTiempo" alignment="CENTER" prefHeight="30.0" prefWidth="120.0" text="Tiempo: 0s" style="-fx-text-fill: #1976D2; -fx-font-size: 14px; -fx-font-weight: bold;" />
+   </HBox>
+   
+   <!-- Panel de botones de ayuda -->
+   <HBox layoutX="50.0" layoutY="95.0" prefWidth="500.0" spacing="10" alignment="CENTER">
+      <Button fx:id="btnPista" onAction="#mostrarPista" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-radius: 3; -fx-background-radius: 3; -fx-padding: 5;" text="💡 Pista" />
+      <Button fx:id="btnModoFacil" onAction="#cambiarModoFacil" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-radius: 3; -fx-background-radius: 3; -fx-padding: 5;" text="🎯 Dificultad" />
+      <Button fx:id="btnGuardarPartida" onAction="#guardarPartida" style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-radius: 3; -fx-background-radius: 3; -fx-padding: 5;" text="💾 Guardar" />
+      <Button fx:id="btnCargarPartidas" onAction="#cargarPartidas" style="-fx-background-color: #607D8B; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-border-radius: 3; -fx-background-radius: 3; -fx-padding: 5;" text="📂 Cargar" />
+   </HBox>
+   
+   <!-- Grid del tablero -->
+   <GridPane fx:id="gridTablero" alignment="CENTER" gridLinesVisible="false" hgap="1.0" layoutX="50.0" layoutY="130.0" minHeight="370.0" prefWidth="500.0" style="-fx-background-color: transparent;" vgap="1.0">
+      <columnConstraints>
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <cursor>
+         <Cursor fx:constant="DEFAULT" />
+      </cursor>
+   </GridPane>
+   
+   <!-- Instrucciones de juego -->
+   <Label layoutX="50.0" layoutY="660.0" prefWidth="500.0" text="Clic izquierdo: Revelar celda | Clic derecho: Marcar mina" style="-fx-text-fill: #616161; -fx-font-size: 12px; -fx-font-weight: bold; -fx-alignment: center;" />
+
+</AnchorPane> 
